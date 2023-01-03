@@ -1,31 +1,41 @@
+// Select The Start Page
+let startPage = document.querySelector('.control-buttons');
 // Select The Start Game Button
-let start = document.querySelector('.control-buttons');
+let startBtn = document.querySelector('.control-buttons span');
+// Select The Player Name Element
+let userName = document.querySelector('.name span');
 
-// Select The Name Element
-let name = document.querySelector('.name span');
+// Select The Sounds
+let startSound = document.getElementById('start');
+let successSound = document.getElementById('success');
+let failSound = document.getElementById('fail');
 
-start.onclick = function(){
-// Prompt Window To Ask For Name
-    let theName = prompt('What is Your Name');
-
-// If Name Is Empty
-    if(theName == null || theName == ''){
-    // Set Name To Unknown
-        name.innerHTML = 'Unknown';
+// Start Game Function
+startBtn.onclick = function(){
+    // Prompt Window To Ask For Name
+    let yourName = prompt('What is Your Name');
+    
+    // If The Name is Empty or Null
+    if(yourName == null || yourName == ''){
+        userName.innerHTML = 'Unknown';
     }else{
-    // Name Is Not Empty
-    // Set Name To Your Name
-        name.innerHTML = theName;
+        // Set The Player Name
+        userName.innerHTML = yourName;
     }
 
-    document.getElementById('start').play();
+    startSound.play();
+    startBtn.remove();
+
+    // Change The Background Color before the game starts
+    startPage.style.background = 'rgba(255, 0, 0, 0.5)';
+
+    setTimeout(() => {
     // Remove Splash Screen
-    setTimeout(() =>{
-        start.remove();
-    },5000)
-    }
+        startPage.remove();
+    }, 5000);
+}
 
-// Effect Duration
+// the main duration
 let duration = 1000;
 
 // Select Blocks Container
@@ -34,97 +44,104 @@ let blocksContainer = document.querySelector('.memory-game-blocks');
 // Create Array From Game Blocks
 let blocks = Array.from(blocksContainer.children);
 
-// Create Range Of Keys
+// Create Array From Game Blocks
 let orderRange = [...Array(blocks.length).keys()];
 
+// Run the shuffle function
 shuffle(orderRange);
 
-// Add Order Css Property To Game Blocks
 blocks.forEach((block, index) =>{
-// Add CSS Order Property
+    // Add Order Css Property
     block.style.order = orderRange[index];
 
-// Add Click Event
-block.addEventListener('click', function(){
-// Trigger The Flip Block Function
-    flipBlock(block);
-});
+    block.addEventListener('click', function(){
+    // Trigger The Flip Block Function
+        flipblock(block)
+    })
 })
 
 // Flip Block Function
-function flipBlock(selectedBlock){
-// Add Class is-flipped
+function flipblock(selectedBlock){
+
+    // Add Class "is-flipped"
     selectedBlock.classList.add('is-flipped');
 
-// Collect All Flipped Cards
-let allFlippedBlocks = blocks.filter(flippedBlock => flippedBlock.classList.contains('is-flipped'));
-
-// If Theres Two Selected Blocks
-if(allFlippedBlocks.length === 2){
-// Stop Clicking Function
-    stopClicking();
-
-// Check Matched Block Function
-    checkMatchedBlocks(allFlippedBlocks[0], allFlippedBlocks[1]);
-}
+    // Collect All Flipped Cards
+    let allFlippedBlocks = blocks.filter(flippedBlock => flippedBlock.classList.contains('is-flipped'));
+    
+    // If Theres Two Selected Blocks
+    if(allFlippedBlocks.length === 2){
+        // Run Stop Clicking Function
+        stopClicking();
+        
+        // Run Check Matched Blocks Function
+        checkMatchedBlocks(allFlippedBlocks[0], allFlippedBlocks[1]);        
+    }
 }
 
 // Stop Clicking Function
 function stopClicking(){
-// Add Class No Clicking on Main Container
+    // Add Class "no-clicking" on Main Container
     blocksContainer.classList.add('no-clicking');
-    
-// Wait Duration
-    setTimeout(() =>{
-// Remove Class No Clicking After The Duration
-        blocksContainer.classList.remove('no-clicking');
-    }, duration)
+
+    setTimeout(() => {
+    // Remove Class "no-clicking" on Main Container After The Duration
+    blocksContainer.classList.remove('no-clicking');
+    }, duration);
 }
 
-// Check Matched Block
-function checkMatchedBlocks(firstBlock, secondBlock){
-    if(firstBlock.dataset.technology === secondBlock.dataset.technology){
+// Check Matched Blocks Function
+function checkMatchedBlocks(firstBlock, SecondBlock){
+    // If the choice is correct
+    if(firstBlock.dataset.technology === SecondBlock.dataset.technology){
+        // Remove Class "is-flipped"
         firstBlock.classList.remove('is-flipped');
-        secondBlock.classList.remove('is-flipped');
-
+        SecondBlock.classList.remove('is-flipped');
+        
+        // Add Class "has-match"
         firstBlock.classList.add('has-match');
-        secondBlock.classList.add('has-match');
+        SecondBlock.classList.add('has-match');
 
-        document.getElementById('success').play();
+        // Turn On The Success Sound
+        successSound.play();
     }else{
+        // Select The Tries Element
         let triesElement = document.querySelector('.tries span');
 
-        triesElement.innerHTML = parseInt(triesElement.innerHTML) + 1;
+        // Increase the number of errors dynamically
+        triesElement.innerHTML = parseInt(triesElement.innerHTML) +1;
+        // Turn On The Wrong Sound
+        failSound.play();
 
-        setTimeout(() => {    
-        firstBlock.classList.remove('is-flipped');
-        secondBlock.classList.remove('is-flipped');
+        // wait The duration
+        setTimeout(() => {
+        // Remove Class "is-flipped" After The duration
+            firstBlock.classList.remove('is-flipped');
+            SecondBlock.classList.remove('is-flipped');
         }, duration);
-        
-        document.getElementById('fail').play();
     }
 }
 
-// Shuffle Function
-function shuffle(array){  
-// Settings Vars
-let current = array.length,
-    temp,
-    random;
-
-    while(current > 0){
-// Get Random Number
+// shuffle Function
+function shuffle(array){
+    // Settings Vars
+    let current = array.length,
+        temp,
+        random;
+    
+    while(current > 0){   
+        // Get Random Number
         random = Math.floor(Math.random() * current);
+        
+        // Decrease Length By One
+        current --;
 
-// Decrease Length By One
-        current--;
-
-// [1] Save Current Element in Stash
+        // Save Current Element in Stash
         temp = array[current];
-// [2] Current Element = Random Element
+        // Current Element = Random Element
         array[current] = array[random];
-// [3] Random Element = Get Element From Stash
+        // Random Element = Get Element From Stash
         array[random] = temp;
+    }
+    return array;
 }
-return array;
-};
