@@ -1,6 +1,6 @@
 /* Start Global Rules */
 body{
-    background-color: #c0b9b69e;
+    background-color: white;
     font-family: Arial, Tahoma, sans-serif;
   }
 *{
@@ -24,6 +24,7 @@ body{
     position: absolute;
     left: 50%;
     top: 50%;
+    transform: translate(-50%, -50%);
     cursor: pointer;
     background-color: red;
     color: white;
@@ -59,6 +60,10 @@ body{
 /* End Info */
 
 /* Start game-blocks */
+.container{
+  position: absolute;
+  top: 30%;
+}
 .memory-game-blocks {
   display: flex;
   width: 1100px;
@@ -95,9 +100,8 @@ body{
     transform: rotateY(180deg);
 }
 .memory-game-blocks img{
-    width: 140px;
-    height: 140px;
-    margin-top: 30px;
+    width: 183px;
+    height: 183px;
 }
 .face{
     position: absolute;
