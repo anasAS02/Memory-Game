@@ -62,7 +62,9 @@ body{
 /* Start game-blocks */
 .container{
   position: absolute;
-  top: 30%;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .memory-game-blocks {
   display: flex;
