@@ -66,6 +66,11 @@ body{
   left: 50%;
   transform: translate(-50%, -50%);
 }
+@media(max-width: 767px){
+  .container{
+    left: 57%;
+  }
+}
 .memory-game-blocks {
   display: flex;
   width: 1100px;
